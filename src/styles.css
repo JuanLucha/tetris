@@ -1,0 +1,19 @@
+#game {
+  display: flex;
+  flex-direction: row;
+  height: 90vh;
+  width: 90vh;
+  margin: auto;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+
+}
+
+.tile {
+  border: 1px solid gray;
+  height: 50px;
+}

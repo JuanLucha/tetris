@@ -1,21 +1,15 @@
-const webpackConfig = require('./webpack.config.js');
-webpackConfig.mode = 'production';
+const webpackConfig = require('./webpack.config.js')
+webpackConfig.mode = 'production'
 
-module.exports = function(config) {
+module.exports = function (config) {
   config.set({
     singleRun: true,
-    
-    browsers: [
-      'PhantomJS'
-    ],
 
-    frameworks: [
-      'jasmine'
-    ],
+    browsers: ['PhantomJS'],
 
-    files: [
-      'spec.bundle.js'
-    ],
+    frameworks: ['jasmine'],
+
+    files: ['spec.bundle.js'],
 
     preprocessors: {
       'spec.bundle.js': ['webpack']
@@ -32,5 +26,5 @@ module.exports = function(config) {
       require('karma-phantomjs-launcher'),
       require('karma-webpack')
     ]
-  });
-};
+  })
+}
