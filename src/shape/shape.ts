@@ -1,28 +1,30 @@
 import { ShapeData } from './shape-data.interface'
+import { Point } from '../shared/point.interface'
+
+export const shapeWidth = 4
+export const shapeHeight = 4
 
 export class Shape {
-  private pattern: boolean[][] = []
-  private color: string
-  private code: string
+  public pattern: boolean[][] = []
+  public color: string
+  public code: string
+  public position: Point
 
   constructor(shapeData: ShapeData) {
     this.pattern = shapeData.pattern
     this.color = shapeData.color
     this.code = shapeData.code
+    this.position = this.initPosition()
   }
 
   public rotateShape(): void {
   }
 
-  public getPattern(): boolean[][] {
-    return this.pattern
+  private initPosition(): Point {
+    return {
+      x: 0,
+      y: 0
+    }
   }
 
-  public getColor(): string {
-    return this.color
-  }
-
-  public getCode(): string {
-    return this.code
-  }
 }

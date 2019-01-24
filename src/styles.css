@@ -1,6 +1,6 @@
 #game {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   height: 90vh;
   width: 90vh;
   margin: auto;
@@ -8,12 +8,13 @@
 
 .row {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   flex: 1;
-
+  height: 50px;
 }
 
 .tile {
   border: 1px solid gray;
   height: 50px;
+  flex: 1;
 }
