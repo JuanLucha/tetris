@@ -1,11 +1,17 @@
+import { ShapesFactory } from './../shape/shapes-factory'
+import { Shape } from './../shape/shape'
+
 export class Board {
   public tiles: string[][]
   public width: number
   public height: number
+  public actualShape: Shape
+  private shapesFactory: ShapesFactory
 
-  constructor(width: number, height: number) {
+  constructor(width: number, height: number, shapesFactory: ShapesFactory) {
     this.width = width
     this.height = height
+    this.shapesFactory = shapesFactory
   }
 
   public resetTiles() {
@@ -17,5 +23,10 @@ export class Board {
       }
       this.tiles.push(newTile)
     }
+  }
+
+  // TODO: remove this later
+  public randomizeShape(): void {
+    this.actualShape = this.shapesFactory.getRandomShape()
   }
 }

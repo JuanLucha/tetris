@@ -1,4 +1,7 @@
-import { Board } from './../board/board';
+import { shapeData } from './../shape/shape-data-list'
+import { ShapesFactory } from './../shape/shapes-factory'
+import { Board } from './../board/board'
+
 const gameSelector: string = '#game'
 const emptyColor: string = 'white'
 const states = {
@@ -9,7 +12,8 @@ const gameLoopInterval: number = 1000
 
 export class Game {
   private gameLoop: number
-  private board: Board = new Board(10, 20)
+  private shapesFactory: ShapesFactory = new ShapesFactory(shapeData)
+  private board: Board = new Board(10, 20, this.shapesFactory)
 
   public render() {
     let game: HTMLElement = document.querySelector(gameSelector)
@@ -22,7 +26,7 @@ export class Game {
         let newTile = document.createElement('div')
         newTile.classList.add('tile')
         newTile.style.backgroundColor = this.board.tiles[x][y] || emptyColor
-        // newTile.innerHTML = `${x}, ${y}`
+        newTile.innerHTML = `${x}, ${y}`
         newRow.appendChild(newTile)
       }
       screen.appendChild(newRow)
@@ -32,21 +36,12 @@ export class Game {
   }
 
   public start() {
+    this.board.randomizeShape()
     this.gameLoop = window.setInterval(() => {
-      this.board.resetTiles()
-      this.changeColors()
       this.moveShape()
       this.render()
     }, gameLoopInterval)
-  }
-
-  private changeColors() {
-    this.board.tiles[1][2] = 'blue'
-    this.board.tiles[1][3] = 'blue'
-    this.board.tiles[1][4] = 'blue'
-    this.board.tiles[1][2] = 'blue'
-    this.board.tiles[7][2] = 'green'
-    this.board.tiles[9][5] = 'pink'
+    console.log(this.shapesFactory.getRandomShape())
   }
 
   public moveShape() {
