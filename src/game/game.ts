@@ -12,8 +12,13 @@ const gameLoopInterval: number = 1000
 
 export class Game {
   private gameLoop: number
-  private shapesFactory: ShapesFactory = new ShapesFactory(shapeData)
-  private board: Board = new Board(10, 20, this.shapesFactory)
+  private shapesFactory: ShapesFactory
+  private board: Board
+
+  constructor() {
+    this.shapesFactory = new ShapesFactory(shapeData)
+    this.board =  new Board(10, 20, this.shapesFactory)
+  }
 
   public render() {
     let game: HTMLElement = document.querySelector(gameSelector)

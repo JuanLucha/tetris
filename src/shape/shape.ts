@@ -12,7 +12,6 @@ export class Shape {
   }
 
   public rotateShape(): void {
-    
   }
 
   public getPattern(): boolean[][] {

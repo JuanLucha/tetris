@@ -12,9 +12,11 @@ export class Board {
     this.width = width
     this.height = height
     this.shapesFactory = shapesFactory
+
+    this.initTiles()
   }
 
-  public resetTiles() {
+  public initTiles() {
     this.tiles = []
     for (let x = 0; x < this.width; x++) {
       let newTile = []
