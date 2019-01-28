@@ -1,6 +1,6 @@
 import { ShapesFactory } from './../shape/shapes-factory'
 import { Shape, shapeWidth, shapeHeight } from './../shape/shape'
-import { Point } from '../shared/point.interface';
+import { Point } from '../shared/point.interface'
 
 export class Board {
   public tiles: string[][]
