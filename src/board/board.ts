@@ -45,19 +45,56 @@ export class Board {
     }
   }
 
-  public moveShape(shape: Shape, newPosition: Point): void {
+  public moveShape(shape: Shape, newPosition: Point): boolean {
+    if (newPosition.x === 0 && newPosition.y === 0) return true
+
     this.eraseShape(shape)
-    shape.position.x = newPosition.x
-    shape.position.y = newPosition.y
-    this.paintTiles(shape, shape.color)
+    if (this.movementIsPossible(shape, newPosition)) {
+      shape.position.x = newPosition.x
+      shape.position.y = newPosition.y
+      this.paintTiles(shape, shape.color)
+      return true
+    } else {
+      this.paintTiles(shape, shape.color)
+      return false
+    }
   }
 
   private paintTile(position: Point, color: string) {
     this.tiles[position.y][position.x] = color
   }
 
-  // TODO: remove this later
   public randomizeShape(): void {
     this.actualShape = this.shapesFactory.getRandomShape()
+  }
+
+  private movementIsPossible(shape: Shape, position: Point): boolean {
+    let posY: number = position.y
+    let posX: number = position.x
+
+    for (let y = 0; y < shapeHeight; y++) {
+      for (let x = 0; x < shapeWidth; x++) {
+        if (shape.pattern[y][x] && !this.isValidTile({ y: posY + y, x: posX + x }, this.backgroundColor)) {
+          return false
+        }
+      }
+    }
+    return true
+  }
+
+  private isValidTile(position: Point, backgroundColor: string): boolean {
+    if (this.tileIsOutOfBoard(position)) {
+      return false
+    } else {
+      return this.tiles[position.y][position.x] === this.backgroundColor
+    }
+  }
+
+  private tileIsOutOfBoard(position: Point): boolean {
+    if (position.x >= this.width || position.y >= this.height) {
+      return true
+    } else {
+      return false
+    }
   }
 }

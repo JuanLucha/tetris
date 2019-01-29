@@ -11,7 +11,11 @@ export class ShapesFactory {
   public getRandomShape(): Shape {
     const numberOfShapes: number = this.shapesData.length
     const randomPosition: number = Math.round(Math.random() * numberOfShapes)
-    return new Shape(this.shapesData[randomPosition])
+    if (randomPosition === numberOfShapes) {
+      return this.getRandomShape()
+    } else {
+      return new Shape(this.shapesData[randomPosition])
+    }
   }
 
 }

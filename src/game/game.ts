@@ -10,7 +10,7 @@ const states = {
   running: 0,
   gameOver: 1
 }
-const gameLoopInterval: number = 100
+const gameLoopInterval: number = 50
 const arrows = {
   left: 37,
   up: 38,
@@ -18,6 +18,8 @@ const arrows = {
   down: 40
 }
 const loopsToTriggerGravity: number = 6
+const boardWidth: number = 10
+const boardHeight: number = 20
 
 export class Game {
   private gameLoop: number
@@ -30,7 +32,7 @@ export class Game {
 
   constructor() {
     this.shapesFactory = new ShapesFactory(shapeData)
-    this.board = new Board(10, 20, this.shapesFactory, emptyColor)
+    this.board = new Board(boardWidth, boardHeight, this.shapesFactory, emptyColor)
   }
 
   public render() {
@@ -77,6 +79,11 @@ export class Game {
       this.newPosition.y = this.actualShape.position.y + 1
     }
     this.gravityLoopCount++
-    this.board.moveShape(this.actualShape, this.newPosition)
+    if (!this.board.moveShape(this.actualShape, this.newPosition)) {
+      this.actualShape = this.shapesFactory.getRandomShape()
+      this.newPosition.x = 0
+      this.newPosition.y = 0
+    }
   }
+
 }
