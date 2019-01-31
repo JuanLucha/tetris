@@ -3,12 +3,13 @@ import { Shape, shapeWidth, shapeHeight } from './../shape/shape'
 import { Point } from '../shared/point.interface'
 
 export class Board {
+  public actualShape: Shape
+  public height: number
   public tiles: string[][]
   public width: number
-  public height: number
-  public actualShape: Shape
-  private shapesFactory: ShapesFactory
+
   private backgroundColor: string
+  private shapesFactory: ShapesFactory
 
   constructor(width: number, height: number, shapesFactory: ShapesFactory, backgroundColor: string) {
     this.width = width
@@ -17,6 +18,10 @@ export class Board {
     this.backgroundColor = backgroundColor
 
     this.initTiles()
+  }
+
+  public eraseShape(shape: Shape): void {
+    this.paintTiles(shape, this.backgroundColor)
   }
 
   public initTiles() {
@@ -30,47 +35,21 @@ export class Board {
     }
   }
 
-  public eraseShape(shape: Shape): void {
-    this.paintTiles(shape, this.backgroundColor)
-  }
-
-  private paintTiles(shape: Shape, color: string): void {
-    let posY: number = shape.position.y
-    let posX: number = shape.position.x
-
-    for (let y = 0; y < shapeHeight; y++) {
-      for (let x = 0; x < shapeWidth; x++) {
-        if (shape.pattern[y][x]) this.paintTile({ y: y + posY, x: x + posX }, color)
-      }
-    }
-  }
-
-  public moveShape(shape: Shape, newPosition: Point): boolean {
-    if (newPosition.x === 0 && newPosition.y === 0) return true
+  public moveShape(shape: Shape): boolean {
+    if (shape.newPosition.x === 0 && shape.newPosition.y === 0) return true
 
     this.eraseShape(shape)
-    if (this.movementIsPossible(shape, newPosition)) {
-      shape.position.x = newPosition.x
-      shape.position.y = newPosition.y
-      this.paintTiles(shape, shape.color)
-      return true
-    } else {
-      this.paintTiles(shape, shape.color)
-      return false
-    }
-  }
-
-  private paintTile(position: Point, color: string) {
-    this.tiles[position.y][position.x] = color
+    this.moveHorizontal(shape)
+    return this.moveVertical(shape)
   }
 
   public randomizeShape(): void {
     this.actualShape = this.shapesFactory.getRandomShape()
   }
 
-  private movementIsPossible(shape: Shape, position: Point): boolean {
-    let posY: number = position.y
-    let posX: number = position.x
+  private isMovementPossible(shape: Shape): boolean {
+    let posY: number = shape.newPosition.y
+    let posX: number = shape.newPosition.x
 
     for (let y = 0; y < shapeHeight; y++) {
       for (let x = 0; x < shapeWidth; x++) {
@@ -86,7 +65,37 @@ export class Board {
     if (this.tileIsOutOfBoard(position)) {
       return false
     } else {
-      return this.tiles[position.y][position.x] === this.backgroundColor
+      return this.tiles[position.y][position.x] === backgroundColor
+    }
+  }
+
+  private moveHorizontal(shape: Shape): void {
+
+  }
+
+  private moveVertical(shape: Shape): boolean {
+    if (this.isMovementPossible(shape)) {
+      shape.confirmMovement()
+      this.paintTiles(shape, shape.color)
+      return true
+    } else {
+      this.paintTiles(shape, shape.color)
+      return false
+    }
+  }
+
+  private paintTile(position: Point, color: string) {
+    this.tiles[position.y][position.x] = color
+  }
+
+  private paintTiles(shape: Shape, color: string): void {
+    let posY: number = shape.position.y
+    let posX: number = shape.position.x
+
+    for (let y = 0; y < shapeHeight; y++) {
+      for (let x = 0; x < shapeWidth; x++) {
+        if (shape.pattern[y][x]) this.paintTile({ y: y + posY, x: x + posX }, color)
+      }
     }
   }
 

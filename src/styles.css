@@ -4,6 +4,7 @@
   height: 90vh;
   width: 90vh;
   margin: auto;
+  border: 1px solid gray;
 }
 
 .row {

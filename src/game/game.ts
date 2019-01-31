@@ -2,37 +2,54 @@ import { shapeData } from './../shape/shape-data-list'
 import { ShapesFactory } from './../shape/shapes-factory'
 import { Board } from './../board/board'
 import { Shape } from '../shape/shape'
-import { Point } from '../shared/point.interface'
 
-const gameSelector: string = '#game'
-const emptyColor: string = 'white'
-const states = {
-  running: 0,
-  gameOver: 1
-}
-const gameLoopInterval: number = 50
 const arrows = {
   left: 37,
   up: 38,
   right: 39,
   down: 40
 }
-const loopsToTriggerGravity: number = 6
-const boardWidth: number = 10
 const boardHeight: number = 20
+const boardWidth: number = 10
+const emptyColor: string = 'white'
+const gameSelector: string = '#game'
+const gameLoopInterval: number = 50
+const loopsToTriggerGravity: number = 6
+const states = {
+  running: 0,
+  gameOver: 1
+}
 
 export class Game {
-  private gameLoop: number
-  private shapesFactory: ShapesFactory
-  private board: Board
   private actualShape: Shape
-  private newPosition: Point = { y: 0, x: 0 }
-  private keyPressed: number
+  private board: Board
+  private gameLoop: number
   private gravityLoopCount: number = 0
+  private keyPressed: number
+  private shapesFactory: ShapesFactory
 
   constructor() {
     this.shapesFactory = new ShapesFactory(shapeData)
     this.board = new Board(boardWidth, boardHeight, this.shapesFactory, emptyColor)
+  }
+
+  public moveShape() {
+    switch (this.keyPressed) {
+      case arrows.left:
+        this.actualShape.moveLeft()
+        break
+      case arrows.right:
+        this.actualShape.moveRight()
+        break
+    }
+    if (this.gravityLoopCount === loopsToTriggerGravity) {
+      this.gravityLoopCount = 0
+      this.actualShape.moveDown()
+    }
+    this.gravityLoopCount++
+    if (!this.board.moveShape(this.actualShape)) {
+      this.actualShape = this.shapesFactory.getRandomShape()
+    }
   }
 
   public render() {
@@ -64,26 +81,4 @@ export class Game {
       this.render()
     }, gameLoopInterval)
   }
-
-  public moveShape() {
-    switch (this.keyPressed) {
-      case arrows.left:
-        this.newPosition.x--
-        break
-      case arrows.right:
-        this.newPosition.x++
-        break
-    }
-    if (this.gravityLoopCount === loopsToTriggerGravity) {
-      this.gravityLoopCount = 0
-      this.newPosition.y = this.actualShape.position.y + 1
-    }
-    this.gravityLoopCount++
-    if (!this.board.moveShape(this.actualShape, this.newPosition)) {
-      this.actualShape = this.shapesFactory.getRandomShape()
-      this.newPosition.x = 0
-      this.newPosition.y = 0
-    }
-  }
-
 }
