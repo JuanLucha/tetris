@@ -47,13 +47,13 @@ export class Board {
     this.actualShape = this.shapesFactory.getRandomShape()
   }
 
-  private isMovementPossible(shape: Shape): boolean {
-    let posY: number = shape.newPosition.y
-    let posX: number = shape.newPosition.x
+  private isMovementPossible(shapePattern: boolean[][], newPosition: Point): boolean {
+    let posY: number = newPosition.y
+    let posX: number = newPosition.x
 
     for (let y = 0; y < shapeHeight; y++) {
       for (let x = 0; x < shapeWidth; x++) {
-        if (shape.pattern[y][x] && !this.isValidTile({ y: posY + y, x: posX + x }, this.backgroundColor)) {
+        if (shapePattern[y][x] && !this.isValidTile({ y: posY + y, x: posX + x }, this.backgroundColor)) {
           return false
         }
       }
@@ -70,11 +70,20 @@ export class Board {
   }
 
   private moveHorizontal(shape: Shape): void {
+    let horizontalPosition: Point = {x: shape.newPosition.x, y: shape.position.y}
 
+    if (!this.isMovementPossible(shape.pattern, horizontalPosition)) {
+      if (shape.isMovingLeft()) {
+        shape.correctMovementRight()
+      } else if (shape.isMovingRight()) {
+        shape.correctMovementLeft()
+      }
+      this.moveHorizontal(shape)
+    }
   }
 
   private moveVertical(shape: Shape): boolean {
-    if (this.isMovementPossible(shape)) {
+    if (this.isMovementPossible(shape.pattern, shape.newPosition)) {
       shape.confirmMovement()
       this.paintTiles(shape, shape.color)
       return true

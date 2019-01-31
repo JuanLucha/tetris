@@ -24,16 +24,32 @@ export class Shape {
     this.position.y = this.newPosition.y
   }
 
+  public correctMovementLeft(): void {
+    this.newPosition.x = this.newPosition.x - 1
+  }
+
+  public correctMovementRight(): void {
+    this.newPosition.x = this.newPosition.x + 1
+  }
+
+  public isMovingLeft(): boolean {
+    return this.position.x > this.newPosition.x
+  }
+
+  public isMovingRight(): boolean {
+    return this.position.x < this.newPosition.x
+  }
+
   public moveDown(): void {
-    this.newPosition.y++
+    this.newPosition.y = this.position.y + 1
   }
 
   public moveLeft(): void {
-    this.newPosition.x--
+    this.newPosition.x = this.position.x - 1
   }
 
   public moveRight(): void {
-    this.newPosition.x++
+    this.newPosition.x = this.position.x + 1
   }
 
   public rotateShape(): void {
