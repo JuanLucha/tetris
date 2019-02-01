@@ -15,6 +15,7 @@ const emptyColor: string = 'white'
 const gameSelector: string = '#game'
 const gameLoopInterval: number = 50
 const loopsToTriggerGravity: number = 6
+const spaceKeyCode: number = 32
 const states = {
   running: 0,
   gameOver: 1
@@ -31,6 +32,11 @@ export class Game {
   constructor() {
     this.shapesFactory = new ShapesFactory(shapeData)
     this.board = new Board(boardWidth, boardHeight, this.shapesFactory, emptyColor)
+    document.addEventListener('keydown', (event: KeyboardEvent) => {
+      if (event.which === spaceKeyCode) {
+        this.board.rotateShape(this.actualShape)
+      }
+    })
   }
 
   public moveShape() {

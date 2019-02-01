@@ -8,8 +8,10 @@ export class Shape {
   public color: string
   public code: string
   public newPosition: Point
-  public pattern: boolean[][] = []
+  public pattern: boolean[][][] = []
   public position: Point
+
+  private rotation: number = 0
 
   constructor(shapeData: ShapeData) {
     this.pattern = shapeData.pattern
@@ -30,6 +32,10 @@ export class Shape {
 
   public correctMovementRight(): void {
     this.newPosition.x = this.newPosition.x + 1
+  }
+
+  public getPattern(): boolean[][] {
+    return this.pattern[this.rotation]
   }
 
   public isMovingLeft(): boolean {
@@ -53,6 +59,8 @@ export class Shape {
   }
 
   public rotateShape(): void {
+    this.rotation++
+    if (this.rotation === 4) this.rotation = 0
   }
 
   private initPosition(): Point {

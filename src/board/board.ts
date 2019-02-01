@@ -47,6 +47,12 @@ export class Board {
     this.actualShape = this.shapesFactory.getRandomShape()
   }
 
+  public rotateShape(shape: Shape): void {
+    this.eraseShape(shape)
+    shape.rotateShape()
+    this.paintTiles(shape, shape.color)
+  }
+
   private isMovementPossible(shapePattern: boolean[][], newPosition: Point): boolean {
     let posY: number = newPosition.y
     let posX: number = newPosition.x
@@ -72,7 +78,7 @@ export class Board {
   private moveHorizontal(shape: Shape): void {
     let horizontalPosition: Point = {x: shape.newPosition.x, y: shape.position.y}
 
-    if (!this.isMovementPossible(shape.pattern, horizontalPosition)) {
+    if (!this.isMovementPossible(shape.getPattern(), horizontalPosition)) {
       if (shape.isMovingLeft()) {
         shape.correctMovementRight()
       } else if (shape.isMovingRight()) {
@@ -83,7 +89,7 @@ export class Board {
   }
 
   private moveVertical(shape: Shape): boolean {
-    if (this.isMovementPossible(shape.pattern, shape.newPosition)) {
+    if (this.isMovementPossible(shape.getPattern(), shape.newPosition)) {
       shape.confirmMovement()
       this.paintTiles(shape, shape.color)
       return true
@@ -103,7 +109,7 @@ export class Board {
 
     for (let y = 0; y < shapeHeight; y++) {
       for (let x = 0; x < shapeWidth; x++) {
-        if (shape.pattern[y][x]) this.paintTile({ y: y + posY, x: x + posX }, color)
+        if (shape.getPattern()[y][x]) this.paintTile({ y: y + posY, x: x + posX }, color)
       }
     }
   }

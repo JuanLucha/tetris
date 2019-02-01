@@ -1,5 +1,5 @@
 export interface ShapeData {
-  pattern: boolean[][]
+  pattern: boolean[][][]
   color: string
   code: string
 }
