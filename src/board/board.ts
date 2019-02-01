@@ -47,6 +47,22 @@ export class Board {
     this.actualShape = this.shapesFactory.getRandomShape()
   }
 
+  public removeCompletedLines(): void {
+    let completedLine: boolean = false
+    for (let y = 0; y < this.height; y++) {
+      completedLine = true
+      for (let x = 0; x < this.width; x++) {
+        if (this.tiles[y][x] === this.backgroundColor) {
+          completedLine = false
+          break
+        }
+      }
+      if (completedLine) {
+        this.removeLine(y)
+      }
+    }
+  }
+
   public rotateShape(shape: Shape): void {
     this.eraseShape(shape)
     shape.rotateShape()
@@ -76,7 +92,7 @@ export class Board {
   }
 
   private moveHorizontal(shape: Shape): void {
-    let horizontalPosition: Point = {x: shape.newPosition.x, y: shape.position.y}
+    let horizontalPosition: Point = { x: shape.newPosition.x, y: shape.position.y }
 
     if (!this.isMovementPossible(shape.getPattern(), horizontalPosition)) {
       if (shape.isMovingLeft()) {
@@ -111,6 +127,17 @@ export class Board {
       for (let x = 0; x < shapeWidth; x++) {
         if (shape.getPattern()[y][x]) this.paintTile({ y: y + posY, x: x + posX }, color)
       }
+    }
+  }
+
+  private removeLine(line: number): void {
+    for (let y = line - 1; y > 0; y--) {
+      for (let x = 0; x < this.width; x++) {
+        this.tiles[y + 1][x] = this.tiles[y][x]
+      }
+    }
+    for (let x = 0; x < this.width; x++) {
+      this.tiles[0][x] = this.backgroundColor
     }
   }
 

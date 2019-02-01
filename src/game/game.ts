@@ -57,6 +57,7 @@ export class Game {
     }
     this.gravityLoopCount++
     if (!this.board.moveShape(this.actualShape)) {
+      this.board.removeCompletedLines()
       this.actualShape = this.shapesFactory.getRandomShape()
     }
   }
