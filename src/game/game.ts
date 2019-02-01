@@ -47,6 +47,9 @@ export class Game {
       case arrows.right:
         this.actualShape.moveRight()
         break
+      case arrows.down:
+        this.actualShape.moveDown()
+        break
     }
     if (this.gravityLoopCount === loopsToTriggerGravity) {
       this.gravityLoopCount = 0
