@@ -27,6 +27,7 @@ export class Game {
   private actualShape: Shape
   private board: Board
   private gameLoop: number
+  private gameState: number
   private gravityLoopCount: number = 0
   private keyPressed: number
   private numberOfRemovedLines: number = 0
@@ -61,9 +62,13 @@ export class Game {
     }
     this.gravityLoopCount++
     if (!this.board.moveShape(this.actualShape)) {
-      this.numberOfRemovedLines = this.board.removeCompletedLines()
-      this.score += this.numberOfRemovedLines * pointsPerLine
-      this.actualShape = this.shapesFactory.getRandomShape()
+      if (this.actualShape.hasMovedDown) {
+        this.numberOfRemovedLines = this.board.removeCompletedLines()
+        this.score += this.numberOfRemovedLines * pointsPerLine
+        this.actualShape = this.shapesFactory.getRandomShape()
+      } else {
+        this.endGame()
+      }
     }
   }
 
@@ -90,12 +95,19 @@ export class Game {
   }
 
   public start() {
+    this.gameState = states.running
     this.actualShape = this.shapesFactory.getRandomShape()
     document.body.onkeydown = (e: KeyboardEvent) => { this.keyPressed = e.keyCode }
     document.body.onkeyup = () => { this.keyPressed = null }
     this.gameLoop = window.setInterval(() => {
-      this.moveShape()
-      this.render()
+      if (this.gameState === states.running) {
+        this.moveShape()
+        this.render()
+      }
     }, gameLoopInterval)
+  }
+
+  private endGame() {
+    this.gameState = states.gameOver
   }
 }

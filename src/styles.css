@@ -1,20 +1,31 @@
 #game {
+  border: 1px solid gray;
   display: flex;
   flex-direction: column;
-  height: 90vh;
-  width: 75vh;
+  height: 80vh;
   margin: auto;
-  border: 1px solid gray;
+  width: 75vh;
+}
+
+#legend {
+  background-color: gainsboro;
+  border: 1px solid black;
+  border-radius: 5px;
+  margin: auto;
+  max-width: 75vh;
 }
 
 .row {
   display: flex;
-  flex-direction: row;
   flex: 1;
+  flex-direction: row;
   height: 5%;
 }
 
 #score-board {
+  font-size: 40px;
+  margin: auto;
+  max-width: 75vh;
   text-align: center;
 }
 

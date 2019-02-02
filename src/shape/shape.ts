@@ -7,6 +7,7 @@ export const shapeWidth = 4
 export class Shape {
   public color: string
   public code: string
+  public hasMovedDown: boolean
   public newPosition: Point
   public pattern: boolean[][][] = []
   public position: Point
@@ -23,7 +24,10 @@ export class Shape {
 
   public confirmMovement(): void {
     this.position.x = this.newPosition.x
-    this.position.y = this.newPosition.y
+    if (this.position.y !== this.newPosition.y) {
+      this.hasMovedDown = true
+      this.position.y = this.newPosition.y
+    }
   }
 
   public correctMovementLeft(): void {
