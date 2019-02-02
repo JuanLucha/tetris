@@ -15,6 +15,8 @@ const emptyColor: string = 'white'
 const gameSelector: string = '#game'
 const gameLoopInterval: number = 50
 const loopsToTriggerGravity: number = 6
+const pointsPerLine: number = 100
+const scoreBoardSelector: string = '#score-board'
 const spaceKeyCode: number = 32
 const states = {
   running: 0,
@@ -27,7 +29,9 @@ export class Game {
   private gameLoop: number
   private gravityLoopCount: number = 0
   private keyPressed: number
+  private numberOfRemovedLines: number = 0
   private shapesFactory: ShapesFactory
+  private score: number = 0
 
   constructor() {
     this.shapesFactory = new ShapesFactory(shapeData)
@@ -57,7 +61,8 @@ export class Game {
     }
     this.gravityLoopCount++
     if (!this.board.moveShape(this.actualShape)) {
-      this.board.removeCompletedLines()
+      this.numberOfRemovedLines = this.board.removeCompletedLines()
+      this.score += this.numberOfRemovedLines * pointsPerLine
       this.actualShape = this.shapesFactory.getRandomShape()
     }
   }
@@ -78,13 +83,16 @@ export class Game {
       screen.appendChild(newRow)
     }
 
+    let scoreBoard: HTMLElement = document.querySelector(scoreBoardSelector)
+    scoreBoard.innerHTML = `<b>Score:</b> ${this.score}`
+
     game.innerHTML = screen.innerHTML
   }
 
   public start() {
     this.actualShape = this.shapesFactory.getRandomShape()
     document.body.onkeydown = (e: KeyboardEvent) => { this.keyPressed = e.keyCode }
-    document.body.onkeyup = (e: KeyboardEvent) => { this.keyPressed = null }
+    document.body.onkeyup = () => { this.keyPressed = null }
     this.gameLoop = window.setInterval(() => {
       this.moveShape()
       this.render()

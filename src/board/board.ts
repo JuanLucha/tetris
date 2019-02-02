@@ -47,8 +47,10 @@ export class Board {
     this.actualShape = this.shapesFactory.getRandomShape()
   }
 
-  public removeCompletedLines(): void {
+  public removeCompletedLines(): number {
     let completedLine: boolean = false
+    let numberOfRemovedLines: number = 0
+
     for (let y = 0; y < this.height; y++) {
       completedLine = true
       for (let x = 0; x < this.width; x++) {
@@ -58,9 +60,12 @@ export class Board {
         }
       }
       if (completedLine) {
+        numberOfRemovedLines++
         this.removeLine(y)
       }
     }
+
+    return numberOfRemovedLines
   }
 
   public rotateShape(shape: Shape): void {
