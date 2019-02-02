@@ -12,8 +12,10 @@ const arrows = {
 const boardHeight: number = 20
 const boardWidth: number = 10
 const emptyColor: string = 'white'
-const gameSelector: string = '#game'
 const gameLoopInterval: number = 50
+const gameOverSelector: string = '#end-game-message'
+const gameOverBackgroundSelector: string = '#end-game-background'
+const gameSelector: string = '#game'
 const loopsToTriggerGravity: number = 6
 const pointsPerLine: number = 100
 const scoreBoardSelector: string = '#score-board'
@@ -36,12 +38,7 @@ export class Game {
 
   constructor() {
     this.shapesFactory = new ShapesFactory(shapeData)
-    this.board = new Board(boardWidth, boardHeight, this.shapesFactory, emptyColor)
-    document.addEventListener('keydown', (event: KeyboardEvent) => {
-      if (event.which === spaceKeyCode) {
-        this.board.rotateShape(this.actualShape)
-      }
-    })
+    this.setupEvents()
   }
 
   public moveShape() {
@@ -95,19 +92,59 @@ export class Game {
   }
 
   public start() {
+    this.score = 0
     this.gameState = states.running
     this.actualShape = this.shapesFactory.getRandomShape()
-    document.body.onkeydown = (e: KeyboardEvent) => { this.keyPressed = e.keyCode }
-    document.body.onkeyup = () => { this.keyPressed = null }
+    this.board = new Board(boardWidth, boardHeight, this.shapesFactory, emptyColor)
+    this.hideGameOver()
     this.gameLoop = window.setInterval(() => {
-      if (this.gameState === states.running) {
-        this.moveShape()
-        this.render()
-      }
+      this.moveShape()
+      this.render()
     }, gameLoopInterval)
   }
 
   private endGame() {
     this.gameState = states.gameOver
+    window.clearInterval(this.gameLoop)
+    this.showGameOver()
+  }
+
+  private hideGameOver() {
+    let gameOverMessage: HTMLElement = document.querySelector(gameOverSelector)
+    let gameOverBackground: HTMLElement = document.querySelector(gameOverBackgroundSelector)
+    gameOverMessage.classList.add('hidden')
+    gameOverMessage.classList.remove('visible')
+    gameOverBackground.classList.add('hidden')
+    gameOverBackground.classList.remove('visible')
+  }
+
+  private isGameRunning() {
+    return this.gameState === states.running
+  }
+
+  private setupEvents() {
+    document.addEventListener('keydown', (event: KeyboardEvent) => {
+      if (event.which === spaceKeyCode) {
+        this.board.rotateShape(this.actualShape)
+      }
+    })
+    document.body.onkeydown = (e: KeyboardEvent) => {
+      console.log(e.keyCode)
+      if (e.keyCode === 13 && !this.isGameRunning()) {
+        this.start()
+      }
+      this.keyPressed = e.keyCode
+    }
+    document.body.onkeyup = () => { this.keyPressed = null }
+  }
+
+  private showGameOver() {
+    let gameOverMessage: HTMLElement = document.querySelector(gameOverSelector)
+    let gameOverBackground: HTMLElement = document.querySelector(gameOverBackgroundSelector)
+    gameOverMessage.innerHTML = `Your final score: <b>${this.score}</b><br>Press 'enter' to start again`
+    gameOverMessage.classList.remove('hidden')
+    gameOverMessage.classList.add('visible')
+    gameOverBackground.classList.remove('hidden')
+    gameOverBackground.classList.add('visible')
   }
 }
