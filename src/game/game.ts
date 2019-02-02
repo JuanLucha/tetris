@@ -73,7 +73,6 @@ export class Game {
         let newTile = document.createElement('div')
         newTile.classList.add('tile')
         newTile.style.backgroundColor = this.board.tiles[y][x] || emptyColor
-        newTile.innerHTML = `${x}, ${y}`
         newRow.appendChild(newTile)
       }
       screen.appendChild(newRow)
